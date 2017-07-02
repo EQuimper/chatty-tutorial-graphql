@@ -15,9 +15,6 @@ export const Resolvers = {
       });
     },
     user(_, { id, email }) {
-      console.log('====================================');
-      console.log({ id, email });
-      console.log('====================================');
       return User.findOne({ where: { id, email } });
     },
   },

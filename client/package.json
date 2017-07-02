@@ -1,0 +1,30 @@
+{
+	"name": "chatty",
+	"version": "0.0.1",
+	"private": true,
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "jest",
+		"postinstall": "rndebugger-open"
+	},
+	"dependencies": {
+		"apollo-client": "^1.7.0",
+		"graphql-tag": "^2.4.2",
+		"react": "16.0.0-alpha.12",
+		"react-apollo": "^1.4.2",
+		"react-native": "0.45.1",
+		"react-redux": "^5.0.5",
+		"redux": "^3.7.1",
+		"redux-devtools-extension": "^2.13.2"
+	},
+	"devDependencies": {
+		"babel-jest": "20.0.3",
+		"babel-preset-react-native": "2.0.0",
+		"jest": "20.0.4",
+		"react-native-debugger-open": "^0.3.11",
+		"react-test-renderer": "16.0.0-alpha.12"
+	},
+	"jest": {
+		"preset": "react-native"
+	}
+}

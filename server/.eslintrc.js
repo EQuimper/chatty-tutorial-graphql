@@ -1,3 +1,7 @@
+const OFF = 0;
+const WARN = 1;
+const ERROR = 2;
+
 module.exports = {
   "parser": "babel-eslint",
   "extends": "airbnb-base",
@@ -5,6 +9,6 @@ module.exports = {
     "import"
   ],
   rules: {
-    "import/prefer-default-export": 0
+    "import/prefer-default-export": OFF
   }
 };
