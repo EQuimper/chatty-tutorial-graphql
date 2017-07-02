@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { ApolloProvider } from 'react-apollo';
 
+import AppWithNavigationState from './navigation';
 import { store, client } from './store';
 
 const styles = StyleSheet.create({
@@ -33,18 +34,7 @@ export default class App extends Component {
   render() {
     return (
       <ApolloProvider store={store} client={client}>
-        <View style={styles.container}>
-          <Text style={styles.welcome}>
-            Welcome to React Native!!
-          </Text>
-          <Text style={styles.instructions}>
-            To get started, edit index.ios.js
-          </Text>
-          <Text style={styles.instructions}>
-            Press Cmd+R to reload,{'\n'}
-            Cmd+D or shake for dev menu
-          </Text>
-        </View>
+        <AppWithNavigationState />
       </ApolloProvider>
     );
   }

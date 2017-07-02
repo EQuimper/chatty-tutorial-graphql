@@ -14,8 +14,8 @@ export const Resolvers = {
         order: [['createdAt', 'DESC']],
       });
     },
-    user(_, { id, email }) {
-      return User.findOne({ where: { id, email } });
+    user(_, args) {
+      return User.findOne({ where: args });
     },
   },
   Group: {
