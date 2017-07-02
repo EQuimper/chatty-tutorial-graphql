@@ -11,6 +11,8 @@ import { ApolloProvider } from 'react-apollo';
 import AppWithNavigationState from './navigation';
 import { store, client } from './store';
 
+console.disableYellowBox = true;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

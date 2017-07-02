@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import randomColor from 'randomcolor';
 import { graphql, compose } from 'react-apollo';
+import update from 'immutability-helper';
 
 import Message from '../components/Message';
 import MessageInput from '../components/MessageInput';
@@ -56,7 +57,8 @@ class Messages extends Component {
     };
   };
   state = {
-    usernameColors: {}
+    usernameColors: {},
+    refreshing: false,
   }
   componentWillReceiveProps(nextProps) {
     const usernameColors = {};
@@ -102,6 +104,10 @@ class Messages extends Component {
     })
   }
 
+  _onRefresh = () => {
+    this.props.loadMoreEntries();
+  }
+
   keyExtractor = item => item.id;
   renderItem = ({ item: message }) => (
     <Message
@@ -112,7 +118,7 @@ class Messages extends Component {
   );
 
   render() {
-    const { loading, group } = this.props;
+    const { loading, group, networkStatus } = this.props;
     if (loading && !group) {
       return (
         <View style={[styles.loading, styles.container]}>
@@ -134,6 +140,8 @@ class Messages extends Component {
           renderItem={this.renderItem}
           onContentSizeChange={this.onContentSizeChange}
           onLayout={this.onLayout}
+          onRefresh={this._onRefresh}
+          refreshing={networkStatus === 4}
         />
         <MessageInput send={this._send} />
       </KeyboardAvoidingView>
@@ -141,14 +149,41 @@ class Messages extends Component {
   }
 }
 
+const ITEMS_PER_PAGE = 10;
+
 const groupQuery = graphql(GROUP_QUERY, {
   options: ownProps => ({
     variables: {
       groupId: ownProps.navigation.state.params.groupId,
+      limit: ITEMS_PER_PAGE,
+      offset: 0
     },
   }),
-  props: ({ data: { loading, group } }) => ({
-    loading, group,
+  props: ({ data: { loading, group, fetchMore, networkStatus } }) => ({
+    loading,
+    group,
+    networkStatus,
+    loadMoreEntries() {
+      return fetchMore({
+        // query: ... (you can specify a different query.
+        // GROUP_QUERY is used by default)
+        variables: {
+          // We are able to figure out offset because it matches
+          // the current messages length
+          offset: group.messages.length,
+        },
+        updateQuery: (previousResult, { fetchMoreResult }) => {
+          // we will make an extra call to check if no more entries
+          if (!fetchMoreResult) { return previousResult; }
+          // push results (older messages) to end of messages list
+          return update(previousResult, {
+            group: {
+              messages: { $push: fetchMoreResult.group.messages },
+            },
+          });
+        },
+      })
+    }
   }),
 });
 
@@ -179,6 +214,8 @@ const createMessageMutation = graphql(CREATE_MESSAGE_MUTATION, {
           query: GROUP_QUERY,
           variables: {
             groupId,
+            offset: 0,
+            limit: ITEMS_PER_PAGE
           },
         });
 
@@ -195,6 +232,8 @@ const createMessageMutation = graphql(CREATE_MESSAGE_MUTATION, {
           query: GROUP_QUERY,
           variables: {
             groupId,
+            offset: 0,
+            limit: ITEMS_PER_PAGE
           },
           data,
         });
