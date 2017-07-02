@@ -6,6 +6,9 @@ import { connect } from 'react-redux';
 
 import Groups from './screens/Groups.screen';
 import Messages from './screens/Messages.screen';
+import GroupDetails from './screens/GroupDetails.screen';
+import NewGroup from './screens/NewGroup.screen';
+import FinalizeGroup from './screens/FinalizeGroup.screen';
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +43,10 @@ const MainScreenNavigator = TabNavigator({
 // Navigation stack for our entire application
 const AppNavigator = StackNavigator({
   Main: { screen: MainScreenNavigator },
-  Messages: { screen: Messages }
+  Messages: { screen: Messages },
+  GroupDetails: { screen: GroupDetails },
+  NewGroup: { screen: NewGroup },
+  FinalizeGroup: { screen: FinalizeGroup },
 }, {
   mode: 'modal'
 });
